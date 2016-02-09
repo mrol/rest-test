@@ -27,8 +27,7 @@ public class Product implements Serializable {
 
     @Id
     @Column(name="ID")
-    @GeneratedValue
-    @ManyToMany()
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "CODE")
