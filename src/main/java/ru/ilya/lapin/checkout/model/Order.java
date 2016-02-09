@@ -1,5 +1,8 @@
 package ru.ilya.lapin.checkout.model;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.DateSerializer;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -62,6 +65,7 @@ public class Order implements Serializable {
         this.number = number;
     }
 
+    @JsonSerialize(using=DateSerializer.class)
     public Date getOrderDate() {
         return orderDate;
     }

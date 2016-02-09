@@ -5,7 +5,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.ilya.lapin.checkout.filter.Filter;
 import ru.ilya.lapin.checkout.model.Product;
 
@@ -29,7 +28,6 @@ import java.util.List;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 @Service("productDao")
-@Transactional
 public class ProductDao {
 
     @Resource(name = "sessionFactory")

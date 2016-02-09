@@ -1,12 +1,15 @@
 package ru.ilya.lapin.checkout.controller;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseBody;
+import ru.ilya.lapin.checkout.controller.uri.ProductRestURIConstants;
 import ru.ilya.lapin.checkout.dao.ProductDao;
+import ru.ilya.lapin.checkout.filter.LikeFilter;
 import ru.ilya.lapin.checkout.model.Product;
 
 import javax.annotation.Resource;
@@ -28,18 +31,28 @@ import java.util.List;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-@RestController
+@Controller
 public class ProductController {
+
+    private static final Logger logger = LoggerFactory.getLogger(ProductController.class);
 
     @Resource(name="productDao")
     private ProductDao productDao;
 
-    @RequestMapping(value = "/user/", method = RequestMethod.GET)
-    public ResponseEntity<List<Product>> listAllProducts() {
-        List<Product> products = productDao.getProducts();
-        if(products.isEmpty()){
-            return new ResponseEntity<List<Product>>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<List<Product>>(products, HttpStatus.OK);
+    @RequestMapping(value = ProductRestURIConstants.DUMMY_PRODUCT, method = RequestMethod.GET)
+    public @ResponseBody Product getDummyProduct() {
+        logger.info("Start getDummyEmployee");
+        Product product = new Product();
+        product.setId(9999);
+        product.setCode("DUMMY_CODE");
+        product.setName("Dummy");
+        product.setValue(0.5);
+        return product;
+    }
+
+    @RequestMapping(value = ProductRestURIConstants.GET_PRODUCT, method = RequestMethod.GET)
+    public @ResponseBody List<Product> getProductByCode(@PathVariable("code") String code) {
+        logger.info("Start getProductByCode. Code = " + code);
+        return productDao.getProducts(new LikeFilter("code", code));
     }
 }
