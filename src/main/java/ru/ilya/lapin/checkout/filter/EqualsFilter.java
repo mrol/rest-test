@@ -4,7 +4,7 @@ import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
 /**
- * Created by ilya on 08.02.16.
+ * Created by ilya on 10.02.16.
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -19,24 +19,20 @@ import org.hibernate.criterion.Restrictions;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-public class DoubleFromToFilter implements Filter {
+public class EqualsFilter implements Filter {
 
     private String propertyName;
-    private Double from;
-    private Double to;
+    private String value;
 
-    public DoubleFromToFilter(String propertyName, Double from, Double to) {
+    public EqualsFilter(String propertyName, String value) {
         this.propertyName = propertyName;
-        this.from = from;
-        this.to = to;
+        this.value = value;
     }
 
+    @Override
     public void setCriteriaFilter(DetachedCriteria criteria) {
-        if (from != null) {
-            criteria.add(Restrictions.gt(propertyName, from));
-        }
-        if (to != null) {
-            criteria.add(Restrictions.lt(propertyName, to));
+        if (value != null) {
+            criteria.add(Restrictions.eq(propertyName, value));
         }
     }
 }

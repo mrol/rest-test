@@ -20,7 +20,7 @@ import java.io.Serializable;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 @Entity
-@Table(name = "PRODUCT")
+@Table(name = "product")
 public class Product implements Serializable {
 
     private static final long serialVersionUID = -1798279619176544614L;
@@ -30,7 +30,7 @@ public class Product implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "CODE")
+    @Column(name = "code")
     private String code;
 
     @Column(name = "NAME")

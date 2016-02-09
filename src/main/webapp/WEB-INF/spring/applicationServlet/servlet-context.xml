@@ -3,9 +3,12 @@
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
              xmlns:beans="http://www.springframework.org/schema/beans"
              xmlns:context="http://www.springframework.org/schema/context"
+             xmlns:jee="http://www.springframework.org/schema/jee" xmlns:tx="http://www.springframework.org/schema/tx"
              xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
         http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+
 
     <!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
 
@@ -36,5 +39,47 @@
 
     <context:component-scan base-package="ru.ilya.lapin.checkout.controller" />
     <context:component-scan base-package="ru.ilya.lapin.checkout.dao"/>
+
+
+    <jee:jndi-lookup id="dataSource"
+                     jndi-name="jdbc/checkout-db"
+                     lookup-on-startup="false"
+                     resource-ref="true"
+                     proxy-interface="javax.sql.DataSource"/>
+
+    <!-- Hibernate session factory -->
+    <beans:bean id="sessionFactory"
+          class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+        <beans:property name="dataSource" ref="dataSource"/>
+
+        <beans:property name="hibernateProperties">
+            <beans:value>
+                hibernate.dialect=org.hibernate.dialect.MySQL5Dialect
+                hibernate.show_sql=true
+                <!--hibernate.format_sql=true-->
+                <!--hibernate.use_sql_comments=true-->
+
+            </beans:value>
+        </beans:property>
+        <beans:property name="packagesToScan" value="ru.ilya.lapin.checkout.model" />
+    </beans:bean>
+
+    <!-- MUST have transaction manager, using aop and aspects  -->
+    <beans:bean id="transactionManager"
+          class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+        <beans:property name="sessionFactory" ref="sessionFactory"/>
+    </beans:bean>
+
+    <!--<tx:advice id="txAdvice" transaction-manager="transactionManager">-->
+    <!--<tx:attributes>-->
+    <!--<tx:method name="get*" read-only="true"/>-->
+    <!--<tx:method name="find*" read-only="true"/>-->
+    <!--<tx:method name="*"/>-->
+    <!--</tx:attributes>-->
+    <!--</tx:advice>-->
+
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+    <context:annotation-config/>
 
 </beans:beans>
