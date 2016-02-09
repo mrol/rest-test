@@ -7,7 +7,7 @@ CREATE TABLE `checkout_test`.`product` (
   `value` DOUBLE NULL,
   PRIMARY KEY (`id`));
 
-CREATE TABLE `checkout_test`.`order` (
+CREATE TABLE `checkout_test`.`orders` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `number` VARCHAR(20) NULL,
   `ORDER_DATE` VARCHAR(45) NULL,

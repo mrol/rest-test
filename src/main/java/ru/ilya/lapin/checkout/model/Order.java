@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by ilya on 08.02.16.
@@ -25,7 +26,7 @@ import java.util.List;
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 @Entity
-@Table(name = "ORDER")
+@Table(name = "orders")
 public class Order implements Serializable {
 
     private static final long serialVersionUID = 5427779557350046035L;
@@ -41,7 +42,7 @@ public class Order implements Serializable {
     @Column(name = "ORDER_DATE")
     private Date orderDate;
 
-    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "product_orders",
             joinColumns = @JoinColumn(name = "order_id"),

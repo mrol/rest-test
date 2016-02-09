@@ -3,8 +3,12 @@ package ru.ilya.lapin.checkout.filter;
 import org.hibernate.criterion.DetachedCriteria;
 import org.hibernate.criterion.Restrictions;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
- * Created by ilya on 08.02.16.
+ * Created by ilya on 10.02.16.
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation; either version 2 of the License, or
@@ -19,37 +23,43 @@ import org.hibernate.criterion.Restrictions;
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-public class DoubleFilter implements Filter {
+public class DateFilter implements Filter {
+
+    private static final String DATETIME_FORMAT = "yyyy-MM-ddHH:mm";
 
     private String propertyName;
-    private Double value;
     private CompareMode compareMode;
+    private Date date;
 
-    public DoubleFilter(String propertyName, CompareMode compareMode, String value) {
-        if (value != null) {
+    public DateFilter(String propertyName, CompareMode compareMode, String date) {
+        if (date != null) {
+
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat(DATETIME_FORMAT);
             try {
-                this.value = Double.parseDouble(value);
-            } catch (NumberFormatException ex) {
-                this.value = null;
+                this.date = simpleDateFormat.parse(date);
+            } catch (ParseException e) {
+                this.date = null;
             }
+
+
             this.propertyName = propertyName;
             this.compareMode = compareMode;
         }
     }
 
-
-    public DoubleFilter(String propertyName, CompareMode compareMode, Double value) {
+    public DateFilter(String propertyName, CompareMode compareMode, Date date) {
         this.propertyName = propertyName;
-        this.value = value;
         this.compareMode = compareMode;
+        this.date = date;
     }
 
+    @Override
     public void setCriteriaFilter(DetachedCriteria criteria) {
-        if (value != null) {
+        if (date != null) {
             if (CompareMode.FROM.equals(compareMode)) {
-                criteria.add(Restrictions.gt(propertyName, value));
+                criteria.add(Restrictions.gt(propertyName, date));
             } else {
-                criteria.add(Restrictions.lt(propertyName, value));
+                criteria.add(Restrictions.lt(propertyName, date));
             }
         }
     }
